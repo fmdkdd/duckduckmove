@@ -1,0 +1,157 @@
+[gd_scene load_steps=25 format=2]
+
+[ext_resource path="res://art/duck-walk3.png" type="Texture" id=1]
+[ext_resource path="res://art/duck-walk2.png" type="Texture" id=2]
+[ext_resource path="res://art/duck-walk0.png" type="Texture" id=3]
+[ext_resource path="res://art/duck-walk1.png" type="Texture" id=4]
+[ext_resource path="res://art/grass.png" type="Texture" id=5]
+[ext_resource path="res://Duck.gd" type="Script" id=6]
+[ext_resource path="res://Ground.gd" type="Script" id=7]
+[ext_resource path="res://art/frog-walk1.png" type="Texture" id=8]
+[ext_resource path="res://art/frog-walk3.png" type="Texture" id=9]
+[ext_resource path="res://art/frog-walk2.png" type="Texture" id=10]
+[ext_resource path="res://art/frog-walk0.png" type="Texture" id=11]
+[ext_resource path="res://Frog.gd" type="Script" id=12]
+[ext_resource path="res://art/chase.ogg" type="AudioStream" id=13]
+[ext_resource path="res://Rock.tscn" type="PackedScene" id=14]
+[ext_resource path="res://Main.gd" type="Script" id=15]
+[ext_resource path="res://art/image_font.txt.fnt" type="BitmapFont" id=16]
+[ext_resource path="res://Message.gd" type="Script" id=17]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 2 ), ExtResource( 1 ) ],
+"loop": true,
+"name": "walk",
+"speed": 3.0
+} ]
+
+[sub_resource type="Curve" id=2]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.0917431, 0.345455 ), -0.932447, -0.932447, 0, 0, Vector2( 0.256881, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.582524, 0.972727 ), 0.966569, 0.966569, 0, 0, Vector2( 0.587379, 0.0181818 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=3]
+width = 800
+curve = SubResource( 2 )
+
+[sub_resource type="Curve" id=4]
+_data = [ Vector2( 0.00458716, 0.8 ), 0.0, 0.0, 0, 0, Vector2( 0.66055, 0.181818 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.590909 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+width = 800
+curve = SubResource( 4 )
+
+[sub_resource type="SpriteFrames" id=6]
+animations = [ {
+"frames": [ ExtResource( 11 ), ExtResource( 8 ), ExtResource( 10 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 10, 16 )
+
+[node name="Main" type="Node"]
+script = ExtResource( 15 )
+rock_scene = ExtResource( 14 )
+rock_speed = 3.05
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 808.0
+margin_bottom = 600.0
+color = Color( 0.262745, 0.0156863, 0.172549, 1 )
+
+[node name="Duck" type="AnimatedSprite" parent="."]
+position = Vector2( 384, 248 )
+scale = Vector2( 10, 10 )
+frames = SubResource( 1 )
+animation = "walk"
+speed_scale = 0.8
+playing = true
+script = ExtResource( 6 )
+
+[node name="Ground" type="Polygon2D" parent="."]
+modulate = Color( 0.839216, 0.713726, 0.827451, 1 )
+position = Vector2( -100.87, 375.008 )
+scale = Vector2( 6.30438, 2.04132 )
+texture = ExtResource( 5 )
+texture_scale = Vector2( 0.536, 0.281 )
+polygon = PoolVector2Array( 16, 110.219, 142.896, 110.219, 142.896, -58.2996, 16, -58.2996 )
+script = ExtResource( 7 )
+scroll_speed = 1.5
+
+[node name="RockSpawnTimer" type="Timer" parent="Ground"]
+autostart = true
+
+[node name="ShadowOverlay" type="Sprite" parent="."]
+position = Vector2( 399.198, 299.906 )
+rotation = -1.5708
+scale = Vector2( 0.753308, 801.957 )
+z_index = 10
+texture = SubResource( 3 )
+
+[node name="ShadowOverlay2" type="Sprite" parent="."]
+position = Vector2( 399.197, 128.557 )
+rotation = -1.5708
+scale = Vector2( 0.324935, 801.957 )
+texture = SubResource( 5 )
+
+[node name="Frog" type="Area2D" parent="."]
+position = Vector2( 392, 264 )
+scale = Vector2( 2, 2 )
+z_index = 11
+script = ExtResource( 12 )
+
+[node name="Sprite" type="AnimatedSprite" parent="Frog"]
+frames = SubResource( 6 )
+animation = "walk"
+speed_scale = 3.0
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Frog"]
+position = Vector2( 0, 8 )
+shape = SubResource( 7 )
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 13 )
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Message" type="Label" parent="HUD"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -136.0
+margin_top = -68.0
+margin_right = -64.0
+margin_bottom = -52.0
+rect_scale = Vector2( 4, 4 )
+custom_colors/font_color = Color( 0.631373, 0.0745098, 0.0745098, 1 )
+custom_fonts/font = ExtResource( 16 )
+text = "You died"
+align = 1
+valign = 1
+script = ExtResource( 17 )
+
+[node name="Score" type="Label" parent="HUD"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -168.0
+margin_top = -4.0
+margin_right = -78.0
+margin_bottom = 12.0
+rect_scale = Vector2( 4, 4 )
+custom_colors/font_color = Color( 0.631373, 0.0745098, 0.0745098, 1 )
+custom_fonts/font = ExtResource( 16 )
+text = "Score 1000"
+align = 1
+
+[node name="DifficultyTimer" type="Timer" parent="."]
+wait_time = 10.0
+
+[connection signal="timeout" from="Ground/RockSpawnTimer" to="." method="_on_RockSpawnTimer_timeout"]
+[connection signal="area_shape_entered" from="Frog" to="." method="_on_Frog_area_shape_entered"]
+[connection signal="timeout" from="DifficultyTimer" to="." method="_on_DifficultyTimer_timeout"]
